@@ -152,7 +152,7 @@ function setFilter(filter) {
     loadTasks();
 }
 function addTask() {
-    fetch('http://127.0.0.1:5000/add_task', {
+    fetch('/add_task', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -170,7 +170,7 @@ function addTask() {
 }
 
 function loadTasks() {
-    fetch(`http://127.0.0.1:5000/get_tasks/${user_id}`)
+    fetch(`/get_tasks/${user_id}`)
     .then(res => res.json())
     .then(data => {
         let list = document.getElementById('taskList');
@@ -206,7 +206,7 @@ function loadTasks() {
 }
 
 function updateTask(id) {
-    fetch(`http://127.0.0.1:5000/update_task/${id}`, {
+    fetch(`/update_task/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -221,7 +221,7 @@ function updateTask(id) {
 }
 
 function deleteTask(id) {
-    fetch(`http://127.0.0.1:5000/delete_task/${id}`, {
+    fetch(`/delete_task/${id}`, {
         method: 'DELETE'
     })
     .then(res => res.json())
@@ -236,7 +236,7 @@ function editTask(id, oldTitle, oldDesc, oldDate) {
     let newDate = prompt("Enter new due date (YYYY-MM-DD):", oldDate);
 
     if (newTitle && newDesc && newDate) {
-        fetch(`http://127.0.0.1:5000/edit_task/${id}`, {
+        fetch(`/edit_task/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -267,7 +267,7 @@ function uploadTask(taskId) {
         let formData = new FormData();
         formData.append("file", file);
 
-        fetch(`http://127.0.0.1:5000/upload_task/${taskId}`, {
+        fetch(`/upload_task/${taskId}`, {
             method: "POST",
             body: formData
         })
