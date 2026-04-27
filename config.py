@@ -1,7 +1,7 @@
 DB_CONFIG = {
     "host": "monorail.proxy.rlwy.net",
     "user": "root",
-    "password": "mwbcdooQRyqXdSZEyfoHbvkTYIDzywXP",
+    "password": "mWbcdooQRyqXdSZEyfoHbvkTYIDzywXP",
     "database": "railway",
     "port": 13101
 }
