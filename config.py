@@ -1,7 +1,7 @@
 DB_CONFIG = {
-    "host": "mysql.railway.internal",
+    "host": "monorail.proxy.rlwy.net",
     "user": "root",
     "password": "Sulaiman@9901332513",
     "database": "railway",
-    "port": 3306
+    "port": 13101
 }
