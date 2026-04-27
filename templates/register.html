@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #dbeafe, #f0f9ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            width: 320px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #222;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 95%;
+            padding: 10px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        p {
+            margin-top: 15px;
+            color: green;
+            font-weight: bold;
+        }
+
+        a {
+            text-decoration: none;
+            color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Register</h2>
+
+    <input type="text" id="name" placeholder="Enter Name"><br>
+    <input type="email" id="email" placeholder="Enter Email"><br>
+    <input type="password" id="password" placeholder="Enter Password"><br>
+
+    <button onclick="register()">Register</button>
+
+    <p id="msg"></p>
+    <p>Already have an account? <a href="/login_page">Login</a></p>
+</div>
+
+<script>
+function register() {
+    fetch('http://127.0.0.1:5000/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('msg').innerText = data.message;
+    });
+}
+</script>
+
+</body>
+</html>

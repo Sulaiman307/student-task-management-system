@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Task Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #dbeafe, #f0f9ff);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #2563eb;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            color: #1e293b;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #475569;
+            margin-bottom: 30px;
+        }
+
+        .buttons a {
+            text-decoration: none;
+            padding: 14px 28px;
+            margin: 10px;
+            display: inline-block;
+            border-radius: 8px;
+            font-size: 16px;
+            color: white;
+            transition: 0.3s;
+        }
+
+        .register-btn {
+            background: #2563eb;
+        }
+
+        .login-btn {
+            background: #16a34a;
+        }
+
+        .admin-btn {
+            background: #111827;
+        }
+
+        .register-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .login-btn:hover {
+            background: #15803d;
+        }
+
+        .admin-btn:hover {
+            background: #000000;
+        }
+
+        .features {
+            width: 85%;
+            margin: 40px auto;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            width: 280px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .card h3 {
+            color: #2563eb;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: #555;
+            font-size: 15px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    Student Task Management System
+</div>
+
+<div class="hero">
+    <h1>Welcome to Task Manager</h1>
+    <p>Manage assignments, study plans, deadlines and academic tasks easily.</p>
+
+    <div class="buttons">
+        <a href="/register_page" class="register-btn">Register</a>
+        <a href="/login_page" class="login-btn">Login</a>
+        <a href="/admin_register" class="admin-btn">Admin Register</a>
+        <a href="/admin_login" class="admin-btn">Admin Login</a>
+    </div>
+</div>
+
+<div class="features">
+
+    <div class="card">
+        <h3>User Authentication</h3>
+        <p>Secure registration and login system with password protection.</p>
+    </div>
+
+    <div class="card">
+        <h3>Task Management</h3>
+        <p>Add, update, delete and track all your academic tasks easily.</p>
+    </div>
+
+    <div class="card">
+        <h3>Status Tracking</h3>
+        <p>Mark tasks completed and monitor deadlines effectively.</p>
+    </div>
+
+</div>
+
+<div class="footer">
+    Developed for Internship Project | Student Task Management System
+</div>
+
+</body>
+</html>

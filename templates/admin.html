@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+        }
+
+        .navbar {
+            background: #111827;
+            color: white;
+            padding: 18px 30px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 90%;
+            margin: 30px auto;
+        }
+
+        .cards {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            flex: 1;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            text-align: center;
+        }
+
+        .card h2 {
+            color: #2563eb;
+            margin: 0;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        h3 {
+            color: #111827;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #2563eb;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        tr:hover {
+            background: #f1f5f9;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            color: white;
+            font-size: 13px;
+        }
+
+        .pending {
+            background: #f59e0b;
+        }
+
+        .completed {
+            background: #16a34a;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            background: #2563eb;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    Admin Panel - Student Task Management System
+</div>
+
+<div class="container">
+
+    <a href="/" class="back-btn">Back to Home</a>
+
+    <div class="cards">
+        <div class="card">
+            <h2 id="userCount">0</h2>
+            <p>Total Users</p>
+        </div>
+
+        <div class="card">
+            <h2 id="taskCount">0</h2>
+            <p>Total Tasks</p>
+        </div>
+
+        <div class="card">
+            <h2 id="pendingCount">0</h2>
+            <p>Pending Tasks</p>
+        </div>
+
+        <div class="card">
+            <h2 id="completedCount">0</h2>
+            <p>Completed Tasks</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>All Users</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody id="userTable"></tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h3>All Tasks</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Task ID</th>
+                    <th>User ID</th>
+                    <th>Task Title</th>
+                    <th>Status</th>
+                    <th>Uploaded File</th>
+                </tr>
+            </thead>
+            <tbody id="taskTable"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+function loadAdminData() {
+    fetch("http://127.0.0.1:5000/admin_data")
+    .then(res => res.json())
+    .then(data => {
+
+        let userTable = document.getElementById("userTable");
+        let taskTable = document.getElementById("taskTable");
+
+        userTable.innerHTML = "";
+        taskTable.innerHTML = "";
+
+        document.getElementById("userCount").innerText = data.users.length;
+        document.getElementById("taskCount").innerText = data.tasks.length;
+
+        let pending = data.tasks.filter(task => task.status === "pending").length;
+        let completed = data.tasks.filter(task => task.status === "completed").length;
+
+        document.getElementById("pendingCount").innerText = pending;
+        document.getElementById("completedCount").innerText = completed;
+
+        data.users.forEach(user => {
+            userTable.innerHTML += `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                </tr>
+            `;
+        });
+
+        data.tasks.forEach(task => {
+            taskTable.innerHTML += `
+                <tr>
+                    <td>${task.id}</td>
+                    <td>${task.user_id}</td>
+                    <td>${task.task_title}</td>
+                    <td>
+                        <span class="status ${task.status}">
+                            ${task.status}
+                        </span>
+                    </td>
+                    <td>
+    ${task.uploaded_file 
+        ? `<a href="/uploads/${task.uploaded_file}" target="_blank">View File</a>` 
+        : "Not Uploaded"}
+</td>
+                </tr>
+            `;
+        });
+    });
+}
+
+loadAdminData();
+</script>
+
+</body>
+</html>

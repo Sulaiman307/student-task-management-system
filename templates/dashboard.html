@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        .navbar {
+            background: #2563eb;
+            color: white;
+            padding: 15px;
+            font-size: 22px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-left: 30px;
+            padding-right: 30px;
+        }
+
+        .logout-btn {
+            background: #dc2626;
+            border: none;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: #b91c1c;
+        }
+
+        .container {
+            width: 400px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .add-btn {
+            width: 95%;
+            padding: 10px;
+            background: #16a34a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .add-btn:hover {
+            background: #15803d;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            background: #f9fafb;
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            text-align: left;
+        }
+
+        .task-buttons {
+            margin-top: 10px;
+        }
+
+        .done-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 8px;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .done-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .delete-btn:hover {
+            background: #b91c1c;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <span>Task Manager Dashboard</span>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+<div class="container">
+    <h3>Add New Task</h3>
+
+    <input type="text" id="title" placeholder="Task Title"><br>
+    <input type="text" id="desc" placeholder="Description"><br>
+    <input type="date" id="date"><br>
+
+    <button class="add-btn" onclick="addTask()">Add Task</button>
+<div style="margin-top:20px;">
+    <button onclick="setFilter('all')">All</button>
+    <button onclick="setFilter('pending')">Pending</button>
+    <button onclick="setFilter('completed')">Completed</button>
+</div>
+    <h3>Your Tasks</h3>
+    <ul id="taskList"></ul>
+</div>
+
+<script>
+let user_id = localStorage.getItem("user_id");
+let currentFilter = "all";
+if (!user_id) {
+    alert("Please login first");
+    window.location.href = "/login_page";
+}
+function setFilter(filter) {
+    currentFilter = filter;
+    loadTasks();
+}
+function addTask() {
+    fetch('http://127.0.0.1:5000/add_task', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            user_id: user_id,
+            task_title: document.getElementById('title').value,
+            description: document.getElementById('desc').value,
+            due_date: document.getElementById('date').value
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        loadTasks();
+    });
+}
+
+function loadTasks() {
+    fetch(`http://127.0.0.1:5000/get_tasks/${user_id}`)
+    .then(res => res.json())
+    .then(data => {
+        let list = document.getElementById('taskList');
+        list.innerHTML = "";
+
+       data.forEach(task => {
+
+    if (currentFilter !== "all" && task.status !== currentFilter) {
+        return;
+    }
+
+            let today = new Date().toISOString().split('T')[0];
+            let due = new Date(task.due_date).toISOString().split('T')[0];
+
+            let color = (due < today && task.status !== "completed") ? "red" : "black";
+
+            list.innerHTML += `
+                <li style="border-left: 5px solid ${color}; padding-left: 10px;">
+                    <strong>${task.task_title}</strong><br>
+                    Description: ${task.description}<br>
+                    Status: ${task.status}<br>
+                    Due Date: <span style="color:${color}">${due}</span>
+                    <div class="task-buttons">
+                        <button class="done-btn" onclick="updateTask(${task.id})">Mark Done</button>
+<button class="done-btn" onclick="editTask(${task.id}, '${task.task_title}', '${task.description}', '${due}')">Edit</button>
+<button class="done-btn" onclick="uploadTask(${task.id})">Upload</button>
+<button class="delete-btn" onclick="deleteTask(${task.id})">Delete</button>
+                    </div>
+                </li>
+            `;
+        });
+    });
+}
+
+function updateTask(id) {
+    fetch(`http://127.0.0.1:5000/update_task/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            status: "completed"
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        loadTasks();
+    });
+}
+
+function deleteTask(id) {
+    fetch(`http://127.0.0.1:5000/delete_task/${id}`, {
+        method: 'DELETE'
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        loadTasks();
+    });
+}
+function editTask(id, oldTitle, oldDesc, oldDate) {
+    let newTitle = prompt("Enter new task title:", oldTitle);
+    let newDesc = prompt("Enter new description:", oldDesc);
+    let newDate = prompt("Enter new due date (YYYY-MM-DD):", oldDate);
+
+    if (newTitle && newDesc && newDate) {
+        fetch(`http://127.0.0.1:5000/edit_task/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                task_title: newTitle,
+                description: newDesc,
+                due_date: newDate
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            loadTasks();
+        });
+    }
+}
+function uploadTask(taskId) {
+    let fileInput = document.createElement("input");
+    fileInput.type = "file";
+
+    fileInput.onchange = function () {
+        let file = fileInput.files[0];
+
+        if (!file) {
+            alert("Please select a file");
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append("file", file);
+
+        fetch(`http://127.0.0.1:5000/upload_task/${taskId}`, {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            loadTasks();
+        })
+        .catch(error => {
+            console.log(error);
+            alert("Upload failed");
+        });
+    };
+
+    fileInput.click();
+}
+
+function logout() {
+    localStorage.removeItem("user_id");
+    window.location.href = "/login_page";
+}
+loadTasks();
+</script>
+
+</body>
+</html>
