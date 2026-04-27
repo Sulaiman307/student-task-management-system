@@ -1,6 +1,7 @@
-DB_CONFIG ={
-    'host':'localhost',
-    'user':'root',
-    'password':'Sulaiman@9901332513',
-    'database':'task_manager'
+DB_CONFIG = {
+    "host": "mysql.railway.internal",
+    "user": "root",
+    "password": "Sulaiman@9901332513",
+    "database": "railway",
+    "port": 3306
 }
